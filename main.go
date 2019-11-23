@@ -1,9 +1,10 @@
 package main
 
 import (
-	"dictionary/api"
 	"fmt"
 	"os"
+
+	"github.com/zhcHoward/MyDictionary-Go/api"
 )
 
 func main() {

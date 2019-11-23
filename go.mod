@@ -1,4 +1,4 @@
-module dictionary
+module github.com/zhcHoward/MyDictionary-Go
 
 go 1.13
 
