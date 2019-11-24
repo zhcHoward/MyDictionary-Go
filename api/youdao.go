@@ -13,7 +13,7 @@ type youdao struct{}
 
 const youdaoURL = "https://www.youdao.com/w/eng/%s"
 
-func (dict youdao) Search(word string) {
+func (dict *youdao) Search(word string) {
 	block, err := dict.getContent(word)
 	if err != nil {
 		fmt.Fprintln(os.Stderr, err)
@@ -24,7 +24,7 @@ func (dict youdao) Search(word string) {
 	dict.display(word, pronunciation, explanation)
 }
 
-func (dict youdao) getContent(word string) (*goquery.Selection, error) {
+func (dict *youdao) getContent(word string) (*goquery.Selection, error) {
 	url := fmt.Sprintf(youdaoURL, word)
 	doc, err := goquery.NewDocument(url)
 	if err != nil {
@@ -34,7 +34,7 @@ func (dict youdao) getContent(word string) (*goquery.Selection, error) {
 	return block, nil
 }
 
-func (dict youdao) parsePronunciation(block *goquery.Selection) []string {
+func (dict *youdao) parsePronunciation(block *goquery.Selection) []string {
 	pronunciation := make([]string, 0, 2)
 	s := block.Find(".baav")
 	if s.Size() == 0 {
@@ -53,7 +53,7 @@ func (dict youdao) parsePronunciation(block *goquery.Selection) []string {
 	return pronunciation
 }
 
-func (dict youdao) parseExplanation(block *goquery.Selection) []map[string]string {
+func (dict *youdao) parseExplanation(block *goquery.Selection) []map[string]string {
 	explanation := make([]map[string]string, 0, 5)
 	children := block.Find(".trans-container > ul").Children()
 	if children.First().Is("li") {
@@ -92,7 +92,7 @@ func (dict youdao) parseExplanation(block *goquery.Selection) []map[string]strin
 	return explanation
 }
 
-func (dict youdao) getIndention(explanation []map[string]string) int {
+func (dict *youdao) getIndention(explanation []map[string]string) int {
 	length := 0
 	for _, explain := range explanation {
 		tmpL := utf8.RuneCountInString(explain["prop"])
@@ -103,7 +103,7 @@ func (dict youdao) getIndention(explanation []map[string]string) int {
 	return length
 }
 
-func (dict youdao) display(word string, pronunciation []string, explanation []map[string]string) {
+func (dict *youdao) display(word string, pronunciation []string, explanation []map[string]string) {
 	fmt.Println(word)
 	for _, p := range pronunciation {
 		fmt.Printf("%s  ", p)
