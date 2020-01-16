@@ -58,10 +58,14 @@ func (dict *youdao) parseExplanation(block *goquery.Selection) []map[string]stri
 	children := block.Find(".trans-container > ul").Children()
 	if children.First().Is("li") {
 		children.Each(func(i int, s *goquery.Selection) {
+			explain := make(map[string]string)
 			data := strings.SplitAfterN(s.Text(), ".", 2)
-			explain := map[string]string{
-				"prop":    data[0],
-				"meaning": strings.TrimSpace(data[1]),
+			if len(data) != 2 {
+				explain["prop"] = ""
+				explain["meaning"] = s.Text()
+			} else {
+				explain["prop"] = data[0]
+				explain["meaning"] = strings.TrimSpace(data[1])
 			}
 			explanation = append(explanation, explain)
 		})
